@@ -117,3 +117,40 @@ export class BoardsController {
 }
 
 ```
+
+## GET 데코레이터를 이용해서 핸들러 추가해보기
+
+1. 서비스에 함수 추가
+
+```
+import { Injectable } from '@nestjs/common';
+
+// Injectable 데코레이터가 있어서 다른 컴포넌트에서 이 서비스를 사용할 수 있게 만들어줌
+@Injectable()
+export class BoardsService {
+  private boards = []; //다른 컴포넌트에서 board라는 배열 값 수정하는 것 막기 위해서
+
+  getAllBoards() {
+    return this.boards;
+  }
+}
+```
+
+2. 서비스에 추가한 함수를 컨트롤러에서 알맞은 데코레이터와 함께 호출
+
+```
+import { Controller, Get } from '@nestjs/common';
+import { BoardsService } from './boards.service';
+
+@Controller('boards')
+export class BoardsController {
+  constructor(private boardsService: BoardsService) {}
+
+  // 모든 게시물을 가져오는 핸들러
+  // http://localhost:3000/boards >> 빈배열 확인 가능
+  @Get('/') // 그냥 @Get()만쓴거랑 똑같다
+  getAllBoard() {
+    return this.boardsService.getAllBoards(); //서비스에서 request를 핸들
+  } // 서비스에서 처리한 값을 컨트롤러에서 브라우저에 보냄
+}
+```
