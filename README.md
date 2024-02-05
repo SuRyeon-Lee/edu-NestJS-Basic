@@ -60,16 +60,60 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## nest 폴더 생성
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+//설치
+npm i -g @nestjs/cli
 
-## Stay in touch
+//부모 디렉토리에서
+nest new project-name
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+//프로젝트 디렉토리에서
+nest new ./
 
-## License
+```
 
-Nest is [MIT licensed](LICENSE).
+## 모듈 생성하기
+
+```
+nest g module boards
+// boards = 모듈 이름
+//이렇게 해주면 app.modul.ts에 자동 등록됨
+```
+
+## 컨트롤러 생성하기
+
+```
+nest g controller boards --no-spec
+// boards = 컨트롤러 이름
+// --no-spec = 테스트를 위한 소스 코드 생성 x
+```
+
+## 서비스 생성하기
+
+```
+nest g service boards --no-spec
+// boards = 서비스 이름
+// --no-spec = 테스트를 위한 소스 코드 생성 x
+```
+
+CLI로 Service 생성시에는 module에도 자동으로 Service가 추가됨
+
+## 종속성 주입하기 (Dependency Injection)
+
+- Board Service를 Board Controller에서 이용할 수 있게 해주는 작업
+- private을 쓰면 boardsService 프로퍼티는 BoardsController 클래 스 내부에서만 사용 가능
+
+```
+//src/boards/boards.controller.ts
+
+import { Controller } from '@nestjs/common';
+import { BoardsService } from './boards.service';
+
+@Controller('boards')
+export class BoardsController {
+  constructor(private boardsService: BoardsService) {}
+}
+
+```
