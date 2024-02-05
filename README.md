@@ -154,3 +154,60 @@ export class BoardsController {
   } // 서비스에서 처리한 값을 컨트롤러에서 브라우저에 보냄
 }
 ```
+
+## 모델 정의하기
+
+- 모델은 interface나 class를 이용해서 정의 할 수 있음
+- 변수의 타입만을 정의할 때 = interface
+- 인스턴스도 생성 = class
+
+```
+// src > boards > board.model.ts
+
+export interface Board {
+  id: string;
+  title: string;
+  description: string;
+  status: BoardStatus; //특정값들 이외에 어떤 것도 들어갈 수 없을때 enum을 정의해서 사용
+}
+
+export enum BoardStatus {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
+}
+
+```
+
+- 정해준 모델(타입)을 서비스와 컨트롤러에 등록해주기
+
+```
+// src > boards > boards.service.ts
+
+import { Injectable } from '@nestjs/common';
+import { Board } from './board.model';
+
+// Injectable 데코레이터가 있어서 다른 컴포넌트에서 이 서비스를 사용할 수 있게 만들어줌
+@Injectable()
+export class BoardsService {
+  private boards: Board[] = []; // 값의 타입 지정
+
+  getAllBoards(): Board[] { // 리턴깂의 타입지정
+    return this.boards;
+  }
+}
+
+```
+
+```
+
+@Controller('boards')
+export class BoardsController {
+  constructor(private boardsService: BoardsService) {}
+
+  @Get()
+  getAllBoard(): Board[] { // 리턴깂의 타입지정
+    return this.boardsService.getAllBoards();
+  }
+}
+
+```
